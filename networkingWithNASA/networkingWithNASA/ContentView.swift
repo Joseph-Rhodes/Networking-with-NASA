@@ -11,6 +11,7 @@ struct nasa: Codable{
     var title:String
     var date:String
     var url:String
+    var hdurl:String
 }
 
 class NasaModel{
@@ -32,7 +33,7 @@ class NasaModel{
                 let (data,response) = try await session.data(for:request)
                 let decoder = JSONDecoder()
                 let nasa = try decoder.decode(networkingWithNASA.nasa.self, from: data)
-                self.imageURL = URL(string:nasa.url)
+                self.imageURL = URL(string:nasa.hdurl)
                 self.refreshDate = Date()
                 return nasa
             }catch{
@@ -60,6 +61,9 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Text("Today's Nasa Image")
+                .font(.title)
+            Text(nasaModel.nasa?.title ?? "")
+                .fontWeight(.bold)
             AsyncImage(url: nasaModel.imageURL){image in
                 image.resizable()
                     .aspectRatio(contentMode: .fit)
